@@ -31,7 +31,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * BudgetService
@@ -78,15 +77,16 @@ public class BudgetService {
             } while (!startYearMonth.isAfter(endYearMonth));
         }
 
-        double budget = 0.0;
-        for (Entry<YearMonth, Integer> entry : durationDays.entrySet()) {
-            String key = DateTimeFormatter.ofPattern("yyyyMM").format(entry.getKey());
-            if (budgetPerDayMap.containsKey(key)) {
-                budget += entry.getValue() * budgetPerDayMap.get(key);
-            }
-        }
-
-        return budget;
+        return durationDays.entrySet().stream()
+            .map(entry -> {
+                String key = DateTimeFormatter.ofPattern("yyyyMM").format(entry.getKey());
+                if (budgetPerDayMap.containsKey(key)) {
+                    return entry.getValue() * budgetPerDayMap.get(key);
+                }
+                return 0.0;
+            })
+            .reduce(0.0, (aDouble, number) -> aDouble.doubleValue() + number.doubleValue())
+            .doubleValue();
     }
 
     private Map<String, Integer> findBudgetPerDayMap(List<Budget> budgets) {
