@@ -28,10 +28,10 @@ import static java.util.stream.Collectors.toMap;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * BudgetService
@@ -49,67 +49,52 @@ public class BudgetService {
         }
 
         List<Budget> budgets = repo.getAll();
-
         Map<String, Integer> budgetPerDayMap = findBudgetPerDayMap(budgets);
 
+        Map<YearMonth, Integer> durationDays = new HashMap<>();
+        YearMonth startYearMonth = YearMonth.from(start);
+        YearMonth endYearMonth = YearMonth.from(end);
 
-        // YearMonth startYearMonth = YearMonth.from(start);
-        // YearMonth endYearMonth = YearMonth.from(end);
-        //
-        // Map<YearMonth, Integer> durationDays = new HashMap<>();
-        // while (startYearMonth.isBefore(endYearMonth)) {
-        //     durationDays.put(startYearMonth, startYearMonth.lengthOfMonth());
-        //     startYearMonth = startYearMonth.plusMonths(1);
-        // }
-        //
-        // double budget = 0.0;
-        //
-        // for (Entry<YearMonth, Integer> entry : durationDays.entrySet()) {
-        //     String key = entry.getKey().toString();
-        //     if (budgetPerDayMap.containsKey(key)) {
-        //         budget += entry.getValue() * budgetPerDayMap.get(key);
-        //     }
-        // }
-        //
-        // return budget;
-
-        // Budget budget = budgets.get(0);
-        // int monthDays = YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).lengthOfMonth();
-        // int budgetPerDay = budget.getAmount() / monthDays;
-
-        double result = 0.0;
-
-        long durationDays;
-        if (YearMonth.from(start).equals(YearMonth.from(end))) {
-            int budgetPerDay = budgetPerDayMap.get(YearMonth.from(start).format(DateTimeFormatter.ofPattern("yyyyMM")));
-            durationDays = start.until(end, ChronoUnit.DAYS) + 1;
-            result += budgetPerDay * durationDays;
+        // same month
+        if (startYearMonth.equals(endYearMonth)) {
+            int days = start.until(end).getDays() + 1;
+            durationDays.put(startYearMonth, days);
         } else {
-            Integer budgetPerDay = budgetPerDayMap.get(YearMonth.from(start).format(DateTimeFormatter.ofPattern("yyyyMM")));
-            if (budgetPerDay == null) {
-                budgetPerDay = 0;
-            }
-            LocalDate newEnd = start.with(TemporalAdjusters.lastDayOfMonth());
-            durationDays = start.until(newEnd, ChronoUnit.DAYS) + 1;
-            result += budgetPerDay * durationDays;
+            // diff month
+            do {
+                int days;
 
-            budgetPerDay = budgetPerDayMap.get(YearMonth.from(end).format(DateTimeFormatter.ofPattern("yyyyMM")));
-            if (budgetPerDay == null) {
-                budgetPerDay = 0;
-            }
-            LocalDate newStart = end.with(TemporalAdjusters.firstDayOfMonth());
-            durationDays = newStart.until(end, ChronoUnit.DAYS) + 1;
-            result += budgetPerDay * durationDays;
+                if (startYearMonth.equals(YearMonth.from(start))) {
+                    days = start.until(startYearMonth.atEndOfMonth()).getDays() + 1;
+                } else if (startYearMonth.equals(YearMonth.from(end))) {
+                    days = startYearMonth.atDay(1).until(end).getDays() + 1;
+                } else {
+                    days = startYearMonth.lengthOfMonth();
+                }
+
+                durationDays.put(startYearMonth, days);
+                startYearMonth = startYearMonth.plusMonths(1);
+
+            } while (!startYearMonth.isAfter(endYearMonth));
         }
 
-        return result;
+        double budget = 0.0;
+        for (Entry<YearMonth, Integer> entry : durationDays.entrySet()) {
+            String key = DateTimeFormatter.ofPattern("yyyyMM").format(entry.getKey());
+            if (budgetPerDayMap.containsKey(key)) {
+                budget += entry.getValue() * budgetPerDayMap.get(key);
+            }
+        }
+
+        return budget;
     }
 
     private Map<String, Integer> findBudgetPerDayMap(List<Budget> budgets) {
-        return budgets.stream().peek(budget -> {
-            int monthDays = YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).lengthOfMonth();
-            budget.setAmount(budget.getAmount() / monthDays);
-        })
+        return budgets.stream()
+            .peek(budget -> {
+                int monthDays = YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).lengthOfMonth();
+                budget.setAmount(budget.getAmount() / monthDays);
+            })
             .collect(toMap(Budget::getYearMonth, Budget::getAmount));
     }
 
