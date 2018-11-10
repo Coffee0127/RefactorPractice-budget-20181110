@@ -95,6 +95,18 @@ public class BudgetServiceTest {
         budgetShouldBe(20.0, start, end);
     }
 
+    @Test
+    public void differentMonth_AllHaveBudget() {
+        givenBudgets(
+            new Budget("201801", 31),
+            new Budget("201802", 280),
+            new Budget("201803", 3100)
+        );
+        LocalDate start = givenDate(2018, 1, 31);
+        LocalDate end = givenDate(2018, 3, 10);
+        budgetShouldBe(1281.0, start, end);
+    }
+
     private void givenBudgets(Budget... budgets) {
         when(repo.getAll()).thenReturn(Arrays.asList(budgets));
     }
