@@ -51,30 +51,29 @@ public class BudgetService {
         Map<String, Integer> budgetPerDayMap = findBudgetPerDayMap(budgets);
 
         Map<YearMonth, Integer> durationDays = new HashMap<>();
-        YearMonth startYearMonth = YearMonth.from(start);
-        YearMonth endYearMonth = YearMonth.from(end);
 
         // same month
-        if (startYearMonth.equals(endYearMonth)) {
+        if (YearMonth.from(start).equals(YearMonth.from(end))) {
             int days = start.until(end).getDays() + 1;
-            durationDays.put(startYearMonth, days);
+            durationDays.put(YearMonth.from(start), days);
         } else {
             // diff month
+            YearMonth indexYearMonth = YearMonth.from(start);
             do {
-                int days;
+                int validDays;
 
-                if (startYearMonth.equals(YearMonth.from(start))) {
-                    days = start.until(startYearMonth.atEndOfMonth()).getDays() + 1;
-                } else if (startYearMonth.equals(YearMonth.from(end))) {
-                    days = startYearMonth.atDay(1).until(end).getDays() + 1;
+                if (indexYearMonth.equals(YearMonth.from(start))) {
+                    validDays = start.until(indexYearMonth.atEndOfMonth()).getDays() + 1;
+                } else if (indexYearMonth.equals(YearMonth.from(end))) {
+                    validDays = indexYearMonth.atDay(1).until(end).getDays() + 1;
                 } else {
-                    days = startYearMonth.lengthOfMonth();
+                    validDays = indexYearMonth.lengthOfMonth();
                 }
 
-                durationDays.put(startYearMonth, days);
-                startYearMonth = startYearMonth.plusMonths(1);
+                durationDays.put(indexYearMonth, validDays);
+                indexYearMonth = indexYearMonth.plusMonths(1);
 
-            } while (!startYearMonth.isAfter(endYearMonth));
+            } while (!indexYearMonth.isAfter(YearMonth.from(end)));
         }
 
         return durationDays.entrySet().stream()
