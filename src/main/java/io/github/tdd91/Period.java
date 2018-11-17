@@ -35,10 +35,6 @@ public class Period {
         this.end = end;
     }
 
-    public LocalDate getEnd() {
-        return end;
-    }
-
     public int getValidDays(Period another) {
         if (isInvalid()) {
             return 0;
@@ -48,20 +44,20 @@ public class Period {
             return 0;
         }
 
-        if (start.isAfter(another.getEnd())) {
+        if (start.isAfter(another.end)) {
             return 0;
         }
 
         YearMonth anotherYearMonth = YearMonth.from(another.start);
         LocalDate overlappingStart = another.start;
-        LocalDate overlappingEnd = another.getEnd();
+        LocalDate overlappingEnd = another.end;
 
         if (isFirstMonth(anotherYearMonth)) {
             overlappingStart = start;
         }
 
         if (isLastMonth(anotherYearMonth)) {
-            overlappingEnd = getEnd();
+            overlappingEnd = end;
         }
 
         return overlappingStart.until(overlappingEnd).getDays() + 1;
@@ -72,10 +68,10 @@ public class Period {
     }
 
     private boolean isLastMonth(YearMonth anotherYearMonth) {
-        return anotherYearMonth.equals(YearMonth.from(getEnd()));
+        return anotherYearMonth.equals(YearMonth.from(end));
     }
 
     private boolean isInvalid() {
-        return start.isAfter(getEnd());
+        return start.isAfter(end);
     }
 }
