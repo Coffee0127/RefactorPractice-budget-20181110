@@ -107,6 +107,16 @@ public class BudgetServiceTest {
         budgetShouldBe(1281.0, start, end);
     }
 
+    @Test
+    public void period_no_overlap_before_budget() {
+        givenBudgets(
+            new Budget("201802", 280)
+        );
+        LocalDate start = givenDate(2018, 1, 31);
+        LocalDate end = givenDate(2018, 1, 31);
+        budgetShouldBe(0.0, start, end);
+    }
+
     private void givenBudgets(Budget... budgets) {
         when(repo.getAll()).thenReturn(Arrays.asList(budgets));
     }
