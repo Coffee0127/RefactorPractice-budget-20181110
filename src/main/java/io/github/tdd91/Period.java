@@ -40,7 +40,7 @@ public class Period {
             return 0;
         }
 
-        if (end.isBefore(another.start) || start.isAfter(another.end)) {
+        if (hasNoOverlap(another)) {
             return 0;
         }
 
@@ -57,6 +57,10 @@ public class Period {
         }
 
         return overlappingStart.until(overlappingEnd).getDays() + 1;
+    }
+
+    private boolean hasNoOverlap(Period another) {
+        return end.isBefore(another.start) || start.isAfter(another.end);
     }
 
     private boolean isFirstMonth(YearMonth anotherYearMonth) {
