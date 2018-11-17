@@ -24,9 +24,7 @@
 package io.github.tdd91;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * BudgetService
@@ -47,20 +45,9 @@ public class BudgetService {
         Period period = new Period(start, end);
 
         double totalAmount = 0D;
-        YearMonth indexYearMonth = YearMonth.from(start);
-        do {
-            YearMonth targetYearMonth = indexYearMonth;
-            Optional<Budget> budgetOptional = budgets.stream()
-                .filter(budget -> budget.getCurrentYearMonth().equals(targetYearMonth))
-                .findFirst();
-            if (budgetOptional.isPresent()) {
-                Budget budget = budgetOptional.get();
-                totalAmount += budget.getOverlappingAmount(period);
-            }
-
-            indexYearMonth = indexYearMonth.plusMonths(1);
-        } while (!indexYearMonth.isAfter(YearMonth.from(end)));
-
+        for (Budget budget : budgets) {
+            totalAmount += budget.getOverlappingAmount(period);
+        }
         return totalAmount;
     }
 
