@@ -37,13 +37,17 @@ public class BudgetService {
 
     public double totalAmount(LocalDate start, LocalDate end) {
         Period period = new Period(start, end);
-        if (period.getStart().isAfter(period.getEnd())) {
+        if (isInvalid(period)) {
             return 0.0;
         }
 
         return repo.getAll().stream()
             .mapToDouble(budget -> budget.getOverlappingAmount(period))
             .sum();
+    }
+
+    private boolean isInvalid(Period period) {
+        return period.getStart().isAfter(period.getEnd());
     }
 
 }
