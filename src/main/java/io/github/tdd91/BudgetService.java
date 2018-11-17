@@ -23,14 +23,10 @@
  */
 package io.github.tdd91;
 
-import static java.util.stream.Collectors.toMap;
-
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,10 +45,6 @@ public class BudgetService {
         }
 
         List<Budget> budgets = repo.getAll();
-        Map<String, Integer> budgetPerDayMap = budgets.stream()
-            .collect(toMap(Budget::getYearMonth, Budget::getDailyAmount));
-
-        Map<YearMonth, Integer> durationDays = new HashMap<>();
 
         // same month
         if (isSameMonth(start, end)) {
@@ -87,7 +79,6 @@ public class BudgetService {
                     }
 
                     totalAmount += budgetOptional.get().getDailyAmount() * validDays;
-                    durationDays.put(indexYearMonth, validDays);
                 }
 
                 indexYearMonth = indexYearMonth.plusMonths(1);
@@ -95,17 +86,6 @@ public class BudgetService {
 
             return totalAmount;
         }
-
-        // return durationDays.entrySet().stream()
-        //     .map(entry -> {
-        //         String key = DateTimeFormatter.ofPattern("yyyyMM").format(entry.getKey());
-        //         if (budgetPerDayMap.containsKey(key)) {
-        //             return entry.getValue() * budgetPerDayMap.get(key);
-        //         }
-        //         return 0.0;
-        //     })
-        //     .reduce(0.0, (aDouble, number) -> aDouble.doubleValue() + number.doubleValue())
-        //     .doubleValue();
     }
 
     private boolean isLastMonth(LocalDate end, YearMonth indexYearMonth) {
