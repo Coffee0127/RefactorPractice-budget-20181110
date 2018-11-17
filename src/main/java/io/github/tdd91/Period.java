@@ -40,11 +40,7 @@ public class Period {
             return 0;
         }
 
-        if (end.isBefore(another.start)) {
-            return 0;
-        }
-
-        if (start.isAfter(another.end)) {
+        if (end.isBefore(another.start) || start.isAfter(another.end)) {
             return 0;
         }
 
