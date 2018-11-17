@@ -23,6 +23,9 @@
  */
 package io.github.tdd91;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Budget
  *
@@ -54,5 +57,9 @@ public class Budget {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public int getMonthDays() {
+        return YearMonth.parse(getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).lengthOfMonth();
     }
 }

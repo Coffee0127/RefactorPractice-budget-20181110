@@ -103,14 +103,10 @@ public class BudgetService {
     private Map<String, Integer> findBudgetPerDayMap(List<Budget> budgets) {
         return budgets.stream()
             .peek(budget -> {
-                int monthDays = getMonthDays(budget);
+                int monthDays = budget.getMonthDays();
                 budget.setAmount(budget.getAmount() / monthDays);
             })
             .collect(toMap(Budget::getYearMonth, Budget::getAmount));
-    }
-
-    private int getMonthDays(Budget budget) {
-        return YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).lengthOfMonth();
     }
 
 }
