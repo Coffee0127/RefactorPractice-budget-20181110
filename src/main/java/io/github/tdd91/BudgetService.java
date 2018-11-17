@@ -46,43 +46,23 @@ public class BudgetService {
         List<Budget> budgets = repo.getAll();
         Period period = new Period(start, end);
 
-        // // same month
-        // if (isSameMonth(start, end)) {
-        //     Optional<Budget> budgetOptional = budgets.stream()
-        //         .filter(budget -> budget.getCurrentYearMonth().equals(YearMonth.from(start)))
-        //         .findFirst();
-        //
-        //     if (!budgetOptional.isPresent()) {
-        //         return 0;
-        //     }
-        //
-        //     Budget budget = budgetOptional.get();
-        //     int validDays = period.getValidDays(budget);
-        //     return budget.getDailyAmount() * validDays;
-        // } else {
-        //     // diff month
-            double totalAmount = 0D;
-            YearMonth indexYearMonth = YearMonth.from(start);
-            do {
-                YearMonth targetYearMonth = indexYearMonth;
-                Optional<Budget> budgetOptional = budgets.stream()
-                    .filter(budget -> budget.getCurrentYearMonth().equals(targetYearMonth))
-                    .findFirst();
-                if (budgetOptional.isPresent()) {
-                    Budget budget = budgetOptional.get();
-                    int validDays = period.getValidDays(budget);
-                    totalAmount += budget.getDailyAmount() * validDays;
-                }
+        double totalAmount = 0D;
+        YearMonth indexYearMonth = YearMonth.from(start);
+        do {
+            YearMonth targetYearMonth = indexYearMonth;
+            Optional<Budget> budgetOptional = budgets.stream()
+                .filter(budget -> budget.getCurrentYearMonth().equals(targetYearMonth))
+                .findFirst();
+            if (budgetOptional.isPresent()) {
+                Budget budget = budgetOptional.get();
+                int validDays = period.getValidDays(budget);
+                totalAmount += budget.getDailyAmount() * validDays;
+            }
 
-                indexYearMonth = indexYearMonth.plusMonths(1);
-            } while (!indexYearMonth.isAfter(YearMonth.from(end)));
+            indexYearMonth = indexYearMonth.plusMonths(1);
+        } while (!indexYearMonth.isAfter(YearMonth.from(end)));
 
-            return totalAmount;
-        // }
-    }
-
-    private boolean isSameMonth(LocalDate start, LocalDate end) {
-        return YearMonth.from(start).equals(YearMonth.from(end));
+        return totalAmount;
     }
 
 }
