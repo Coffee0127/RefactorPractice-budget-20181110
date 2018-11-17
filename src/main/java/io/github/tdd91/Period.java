@@ -52,15 +52,23 @@ public class Period {
         LocalDate overlappingStart = another.getStart();
         LocalDate overlappingEnd = another.getEnd();
 
-        if (anotherYearMonth.equals(YearMonth.from(getStart()))) {
+        if (isFirstMonth(anotherYearMonth)) {
             overlappingStart = getStart();
         }
 
-        if (anotherYearMonth.equals(YearMonth.from(getEnd()))) {
+        if (isLastMonth(anotherYearMonth)) {
             overlappingEnd = getEnd();
         }
 
         return overlappingStart.until(overlappingEnd).getDays() + 1;
+    }
+
+    private boolean isFirstMonth(YearMonth anotherYearMonth) {
+        return anotherYearMonth.equals(YearMonth.from(getStart()));
+    }
+
+    private boolean isLastMonth(YearMonth anotherYearMonth) {
+        return anotherYearMonth.equals(YearMonth.from(getEnd()));
     }
 
     private boolean isInvalid() {
