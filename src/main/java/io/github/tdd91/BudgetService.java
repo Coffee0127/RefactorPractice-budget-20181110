@@ -65,7 +65,7 @@ public class BudgetService {
             }
 
             int validDays = start.until(end).getDays() + 1;
-            durationDays.put(YearMonth.from(start), validDays);
+            return budgetOptional.get().getDailyAmount() * validDays;
         } else {
             // diff month
             YearMonth indexYearMonth = YearMonth.from(start);
