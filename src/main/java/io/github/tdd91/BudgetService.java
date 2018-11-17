@@ -44,6 +44,7 @@ public class BudgetService {
         }
 
         List<Budget> budgets = repo.getAll();
+        Period period = new Period(start, end);
 
         // same month
         if (isSameMonth(start, end)) {
@@ -69,7 +70,7 @@ public class BudgetService {
                 if (budgetOptional.isPresent()) {
                     Budget budget = budgetOptional.get();
 
-                    int validDays = new Period(start, end).getValidDays(budget);
+                    int validDays = period.getValidDays(budget);
                     totalAmount += budget.getDailyAmount() * validDays;
                 }
 
