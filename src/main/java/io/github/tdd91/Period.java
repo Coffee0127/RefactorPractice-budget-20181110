@@ -44,6 +44,10 @@ public class Period {
     }
 
     public int getValidDays(Budget budget) {
+        if (isInvalid()) {
+            return 0;
+        }
+
         LocalDate overlappingStart = budget.getCurrentYearMonth().atDay(1);
         LocalDate overlappingEnd = budget.getCurrentYearMonth().atEndOfMonth();
 
@@ -56,5 +60,9 @@ public class Period {
         }
 
         return overlappingStart.until(overlappingEnd).getDays() + 1;
+    }
+
+    private boolean isInvalid() {
+        return getStart().isAfter(getEnd());
     }
 }
