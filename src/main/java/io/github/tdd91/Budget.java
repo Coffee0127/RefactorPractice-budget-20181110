@@ -72,6 +72,6 @@ public class Budget {
     }
 
     public double getOverlappingAmount(Period period) {
-        return ((double) getDailyAmount()) * period.getValidDays(this);
+        return ((double) getDailyAmount()) * period.getValidDays(new Period(this.getCurrentYearMonth().atDay(1), this.getCurrentYearMonth().atEndOfMonth()));
     }
 }

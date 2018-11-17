@@ -43,12 +43,11 @@ public class Period {
         return end;
     }
 
-    public int getValidDays(Budget budget) {
+    public int getValidDays(Period another) {
         if (isInvalid()) {
             return 0;
         }
 
-        Period another = new Period(budget.getCurrentYearMonth().atDay(1), budget.getCurrentYearMonth().atEndOfMonth());
         LocalDate firstDay = another.getStart();
         LocalDate lastDay = another.getEnd();
         YearMonth anotherYearMonth = YearMonth.from(firstDay);
