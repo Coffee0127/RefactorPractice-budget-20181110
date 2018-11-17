@@ -56,8 +56,9 @@ public class BudgetService {
                 return 0;
             }
 
-            int validDays = start.until(end).getDays() + 1;
-            return budgetOptional.get().getDailyAmount() * validDays;
+            Budget budget = budgetOptional.get();
+            int validDays = period.getValidDays(budget);
+            return budget.getDailyAmount() * validDays;
         } else {
             // diff month
             double totalAmount = 0D;
@@ -69,7 +70,6 @@ public class BudgetService {
                     .findFirst();
                 if (budgetOptional.isPresent()) {
                     Budget budget = budgetOptional.get();
-
                     int validDays = period.getValidDays(budget);
                     totalAmount += budget.getDailyAmount() * validDays;
                 }
