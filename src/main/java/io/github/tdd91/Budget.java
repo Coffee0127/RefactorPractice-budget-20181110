@@ -23,6 +23,7 @@
  */
 package io.github.tdd91;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
@@ -72,6 +73,12 @@ public class Budget {
     }
 
     public double getOverlappingAmount(Period period) {
-        return ((double) getDailyAmount()) * period.getValidDays(new Period(this.getCurrentYearMonth().atDay(1), this.getCurrentYearMonth().atEndOfMonth()));
+        return ((double) getDailyAmount()) * period.getValidDays(createPeriod());
+    }
+
+    private Period createPeriod() {
+        LocalDate firstDay = this.getCurrentYearMonth().atDay(1);
+        LocalDate lastDay = this.getCurrentYearMonth().atEndOfMonth();
+        return new Period(firstDay, lastDay);
     }
 }
