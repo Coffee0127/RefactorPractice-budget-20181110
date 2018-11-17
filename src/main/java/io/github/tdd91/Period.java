@@ -52,6 +52,10 @@ public class Period {
             return 0;
         }
 
+        if (start.isAfter(another.getEnd())) {
+            return 0;
+        }
+
         YearMonth anotherYearMonth = YearMonth.from(another.getStart());
         LocalDate overlappingStart = another.getStart();
         LocalDate overlappingEnd = another.getEnd();
