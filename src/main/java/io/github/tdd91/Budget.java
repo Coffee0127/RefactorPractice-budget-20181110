@@ -60,15 +60,15 @@ public class Budget {
         this.amount = amount;
     }
 
-    public int getMonthDays() {
+    private int getMonthDays() {
         return getCurrentYearMonth().lengthOfMonth();
     }
 
-    public int getDailyAmount() {
+    private int getDailyAmount() {
         return getAmount() / getMonthDays();
     }
 
-    public YearMonth getCurrentYearMonth() {
+    private YearMonth getCurrentYearMonth() {
         return YearMonth.parse(getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM"));
     }
 
