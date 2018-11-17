@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * BudgetService
@@ -55,6 +56,14 @@ public class BudgetService {
 
         // same month
         if (isSameMonth(start, end)) {
+            Optional<Budget> budgetOptional = budgets.stream()
+                .filter(budget -> YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).equals(YearMonth.from(start)))
+                .findFirst();
+
+            if (!budgetOptional.isPresent()) {
+                return 0;
+            }
+
             int validDays = start.until(end).getDays() + 1;
             durationDays.put(YearMonth.from(start), validDays);
         } else {
