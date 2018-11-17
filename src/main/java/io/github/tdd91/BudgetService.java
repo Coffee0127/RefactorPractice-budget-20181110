@@ -24,7 +24,6 @@
 package io.github.tdd91;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * BudgetService
@@ -41,14 +40,10 @@ public class BudgetService {
             return 0.0;
         }
 
-        List<Budget> budgets = repo.getAll();
         Period period = new Period(start, end);
-
-        double totalAmount = 0D;
-        for (Budget budget : budgets) {
-            totalAmount += budget.getOverlappingAmount(period);
-        }
-        return totalAmount;
+        return repo.getAll().stream()
+            .mapToDouble(budget -> budget.getOverlappingAmount(period))
+            .sum();
     }
 
 }
