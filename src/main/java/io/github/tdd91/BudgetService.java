@@ -49,7 +49,7 @@ public class BudgetService {
         // same month
         if (isSameMonth(start, end)) {
             Optional<Budget> budgetOptional = budgets.stream()
-                .filter(budget -> YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).equals(YearMonth.from(start)))
+                .filter(budget -> getCurrentYearMonth(budget).equals(YearMonth.from(start)))
                 .findFirst();
 
             if (!budgetOptional.isPresent()) {
@@ -65,7 +65,7 @@ public class BudgetService {
             do {
                 YearMonth targetYearMonth = indexYearMonth;
                 Optional<Budget> budgetOptional = budgets.stream()
-                    .filter(budget -> YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).equals(targetYearMonth))
+                    .filter(budget -> getCurrentYearMonth(budget).equals(targetYearMonth))
                     .findFirst();
                 if (budgetOptional.isPresent()) {
                     LocalDate tempStart;
@@ -90,6 +90,10 @@ public class BudgetService {
 
             return totalAmount;
         }
+    }
+
+    private YearMonth getCurrentYearMonth(Budget budget) {
+        return YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM"));
     }
 
     private boolean isLastMonth(LocalDate end, YearMonth indexYearMonth) {
