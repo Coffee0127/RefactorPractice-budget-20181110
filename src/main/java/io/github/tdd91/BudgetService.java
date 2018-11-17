@@ -75,7 +75,7 @@ public class BudgetService {
                     } else if (isLastMonth(end, indexYearMonth)) {
                         validDays = indexYearMonth.atDay(1).until(end).getDays() + 1;
                     } else {
-                        validDays = indexYearMonth.lengthOfMonth();
+                        validDays = indexYearMonth.atDay(1).until(indexYearMonth.atEndOfMonth()).getDays() + 1;
                     }
 
                     totalAmount += budgetOptional.get().getDailyAmount() * validDays;
