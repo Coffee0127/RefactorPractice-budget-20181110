@@ -46,21 +46,21 @@ public class BudgetService {
         List<Budget> budgets = repo.getAll();
         Period period = new Period(start, end);
 
-        // same month
-        if (isSameMonth(start, end)) {
-            Optional<Budget> budgetOptional = budgets.stream()
-                .filter(budget -> budget.getCurrentYearMonth().equals(YearMonth.from(start)))
-                .findFirst();
-
-            if (!budgetOptional.isPresent()) {
-                return 0;
-            }
-
-            Budget budget = budgetOptional.get();
-            int validDays = period.getValidDays(budget);
-            return budget.getDailyAmount() * validDays;
-        } else {
-            // diff month
+        // // same month
+        // if (isSameMonth(start, end)) {
+        //     Optional<Budget> budgetOptional = budgets.stream()
+        //         .filter(budget -> budget.getCurrentYearMonth().equals(YearMonth.from(start)))
+        //         .findFirst();
+        //
+        //     if (!budgetOptional.isPresent()) {
+        //         return 0;
+        //     }
+        //
+        //     Budget budget = budgetOptional.get();
+        //     int validDays = period.getValidDays(budget);
+        //     return budget.getDailyAmount() * validDays;
+        // } else {
+        //     // diff month
             double totalAmount = 0D;
             YearMonth indexYearMonth = YearMonth.from(start);
             do {
@@ -78,7 +78,7 @@ public class BudgetService {
             } while (!indexYearMonth.isAfter(YearMonth.from(end)));
 
             return totalAmount;
-        }
+        // }
     }
 
     private boolean isSameMonth(LocalDate start, LocalDate end) {
