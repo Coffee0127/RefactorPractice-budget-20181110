@@ -44,17 +44,15 @@ public class Period {
     }
 
     public int getValidDays(Budget budget) {
-        LocalDate tempStart;
-        LocalDate tempEnd;
+        LocalDate tempStart = budget.getCurrentYearMonth().atDay(1);
+        LocalDate tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+
         if (budget.getCurrentYearMonth().equals(YearMonth.from(getStart()))) {
             tempStart = getStart();
-            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
-        } else if (budget.getCurrentYearMonth().equals(YearMonth.from(getEnd()))) {
-            tempStart = budget.getCurrentYearMonth().atDay(1);
+        }
+
+        if (budget.getCurrentYearMonth().equals(YearMonth.from(getEnd()))) {
             tempEnd = getEnd();
-        } else {
-            tempStart = budget.getCurrentYearMonth().atDay(1);
-            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
         }
 
         return tempStart.until(tempEnd).getDays() + 1;
