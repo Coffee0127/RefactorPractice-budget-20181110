@@ -36,11 +36,11 @@ public class BudgetService {
     private IBudgetRepo repo;
 
     public double totalAmount(LocalDate start, LocalDate end) {
-        if (start.isAfter(end)) {
+        Period period = new Period(start, end);
+        if (period.getStart().isAfter(period.getEnd())) {
             return 0.0;
         }
 
-        Period period = new Period(start, end);
         return repo.getAll().stream()
             .mapToDouble(budget -> budget.getOverlappingAmount(period))
             .sum();
