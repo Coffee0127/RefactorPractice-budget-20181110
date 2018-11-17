@@ -44,17 +44,17 @@ public class Period {
     }
 
     public int getValidDays(Budget budget) {
-        LocalDate tempStart = budget.getCurrentYearMonth().atDay(1);
-        LocalDate tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+        LocalDate overlappingStart = budget.getCurrentYearMonth().atDay(1);
+        LocalDate overlappingEnd = budget.getCurrentYearMonth().atEndOfMonth();
 
         if (budget.getCurrentYearMonth().equals(YearMonth.from(getStart()))) {
-            tempStart = getStart();
+            overlappingStart = getStart();
         }
 
         if (budget.getCurrentYearMonth().equals(YearMonth.from(getEnd()))) {
-            tempEnd = getEnd();
+            overlappingEnd = getEnd();
         }
 
-        return tempStart.until(tempEnd).getDays() + 1;
+        return overlappingStart.until(overlappingEnd).getDays() + 1;
     }
 }
