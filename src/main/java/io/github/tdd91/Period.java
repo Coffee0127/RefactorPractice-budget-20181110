@@ -51,7 +51,7 @@ public class Period {
         Period another = new Period(budget.getCurrentYearMonth().atDay(1), budget.getCurrentYearMonth().atEndOfMonth());
         LocalDate firstDay = another.getStart();
         LocalDate lastDay = another.getEnd();
-        YearMonth anotherYearMonth = budget.getCurrentYearMonth();
+        YearMonth anotherYearMonth = YearMonth.from(firstDay);
         LocalDate overlappingStart = firstDay;
         LocalDate overlappingEnd = lastDay;
 
