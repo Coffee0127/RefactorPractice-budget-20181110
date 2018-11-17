@@ -55,13 +55,17 @@ public class BudgetService {
                 .findFirst();
             if (budgetOptional.isPresent()) {
                 Budget budget = budgetOptional.get();
-                totalAmount += budget.getDailyAmount() * period.getValidDays(budget);
+                totalAmount += getOverlappingAmount(period, budget);
             }
 
             indexYearMonth = indexYearMonth.plusMonths(1);
         } while (!indexYearMonth.isAfter(YearMonth.from(end)));
 
         return totalAmount;
+    }
+
+    private int getOverlappingAmount(Period period, Budget budget) {
+        return budget.getDailyAmount() * period.getValidDays(budget);
     }
 
 }
