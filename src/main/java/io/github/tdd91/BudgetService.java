@@ -53,18 +53,18 @@ public class BudgetService {
         Map<YearMonth, Integer> durationDays = new HashMap<>();
 
         // same month
-        if (YearMonth.from(start).equals(YearMonth.from(end))) {
-            int days = start.until(end).getDays() + 1;
-            durationDays.put(YearMonth.from(start), days);
+        if (isSameMonth(start, end)) {
+            int validDays = start.until(end).getDays() + 1;
+            durationDays.put(YearMonth.from(start), validDays);
         } else {
             // diff month
             YearMonth indexYearMonth = YearMonth.from(start);
             do {
                 int validDays;
 
-                if (indexYearMonth.equals(YearMonth.from(start))) {
+                if (isFirstMonth(start, indexYearMonth)) {
                     validDays = start.until(indexYearMonth.atEndOfMonth()).getDays() + 1;
-                } else if (indexYearMonth.equals(YearMonth.from(end))) {
+                } else if (isLastMonth(end, indexYearMonth)) {
                     validDays = indexYearMonth.atDay(1).until(end).getDays() + 1;
                 } else {
                     validDays = indexYearMonth.lengthOfMonth();
@@ -86,6 +86,18 @@ public class BudgetService {
             })
             .reduce(0.0, (aDouble, number) -> aDouble.doubleValue() + number.doubleValue())
             .doubleValue();
+    }
+
+    private boolean isLastMonth(LocalDate end, YearMonth indexYearMonth) {
+        return indexYearMonth.equals(YearMonth.from(end));
+    }
+
+    private boolean isFirstMonth(LocalDate start, YearMonth indexYearMonth) {
+        return indexYearMonth.equals(YearMonth.from(start));
+    }
+
+    private boolean isSameMonth(LocalDate start, LocalDate end) {
+        return YearMonth.from(start).equals(YearMonth.from(end));
     }
 
     private Map<String, Integer> findBudgetPerDayMap(List<Budget> budgets) {
