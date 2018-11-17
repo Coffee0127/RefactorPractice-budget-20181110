@@ -55,8 +55,7 @@ public class BudgetService {
                 .findFirst();
             if (budgetOptional.isPresent()) {
                 Budget budget = budgetOptional.get();
-                int validDays = period.getValidDays(budget);
-                totalAmount += budget.getDailyAmount() * validDays;
+                totalAmount += budget.getDailyAmount() * period.getValidDays(budget);
             }
 
             indexYearMonth = indexYearMonth.plusMonths(1);
