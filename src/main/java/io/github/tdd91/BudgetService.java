@@ -71,15 +71,15 @@ public class BudgetService {
 
                     LocalDate tempStart;
                     LocalDate tempEnd;
-                    if (isFirstMonth(start, indexYearMonth)) {
+                    if (isFirstMonth(start, budget.getCurrentYearMonth())) {
                         tempStart = start;
-                        tempEnd = indexYearMonth.atEndOfMonth();
-                    } else if (isLastMonth(end, indexYearMonth)) {
-                        tempStart = indexYearMonth.atDay(1);
+                        tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+                    } else if (isLastMonth(end, budget.getCurrentYearMonth())) {
+                        tempStart = budget.getCurrentYearMonth().atDay(1);
                         tempEnd = end;
                     } else {
-                        tempStart = indexYearMonth.atDay(1);
-                        tempEnd = indexYearMonth.atEndOfMonth();
+                        tempStart = budget.getCurrentYearMonth().atDay(1);
+                        tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
                     }
 
                     int validDays = tempStart.until(tempEnd).getDays() + 1;
