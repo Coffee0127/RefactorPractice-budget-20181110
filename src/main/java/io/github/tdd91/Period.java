@@ -48,8 +48,10 @@ public class Period {
             return 0;
         }
 
-        LocalDate overlappingStart = budget.getCurrentYearMonth().atDay(1);
-        LocalDate overlappingEnd = budget.getCurrentYearMonth().atEndOfMonth();
+        LocalDate firstDay = budget.getCurrentYearMonth().atDay(1);
+        LocalDate lastDay = budget.getCurrentYearMonth().atEndOfMonth();
+        LocalDate overlappingStart = firstDay;
+        LocalDate overlappingEnd = lastDay;
 
         if (budget.getCurrentYearMonth().equals(YearMonth.from(getStart()))) {
             overlappingStart = getStart();
