@@ -69,20 +69,7 @@ public class BudgetService {
                 if (budgetOptional.isPresent()) {
                     Budget budget = budgetOptional.get();
 
-                    LocalDate tempStart;
-                    LocalDate tempEnd;
-                    if (isFirstMonth(start, budget.getCurrentYearMonth())) {
-                        tempStart = start;
-                        tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
-                    } else if (isLastMonth(end, budget.getCurrentYearMonth())) {
-                        tempStart = budget.getCurrentYearMonth().atDay(1);
-                        tempEnd = end;
-                    } else {
-                        tempStart = budget.getCurrentYearMonth().atDay(1);
-                        tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
-                    }
-
-                    int validDays = tempStart.until(tempEnd).getDays() + 1;
+                    int validDays = getValidDays(start, end, budget);
                     totalAmount += budget.getDailyAmount() * validDays;
                 }
 
@@ -91,6 +78,23 @@ public class BudgetService {
 
             return totalAmount;
         }
+    }
+
+    private int getValidDays(LocalDate start, LocalDate end, Budget budget) {
+        LocalDate tempStart;
+        LocalDate tempEnd;
+        if (isFirstMonth(start, budget.getCurrentYearMonth())) {
+            tempStart = start;
+            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+        } else if (isLastMonth(end, budget.getCurrentYearMonth())) {
+            tempStart = budget.getCurrentYearMonth().atDay(1);
+            tempEnd = end;
+        } else {
+            tempStart = budget.getCurrentYearMonth().atDay(1);
+            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+        }
+
+        return tempStart.until(tempEnd).getDays() + 1;
     }
 
     private boolean isLastMonth(LocalDate end, YearMonth indexYearMonth) {
