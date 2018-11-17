@@ -69,7 +69,7 @@ public class BudgetService {
                 if (budgetOptional.isPresent()) {
                     Budget budget = budgetOptional.get();
 
-                    int validDays = getValidDays(new Period(start, end), budget);
+                    int validDays = new Period(start, end).getValidDays(budget);
                     totalAmount += budget.getDailyAmount() * validDays;
                 }
 
@@ -78,23 +78,6 @@ public class BudgetService {
 
             return totalAmount;
         }
-    }
-
-    private int getValidDays(Period period, Budget budget) {
-        LocalDate tempStart;
-        LocalDate tempEnd;
-        if (budget.getCurrentYearMonth().equals(YearMonth.from(period.getStart()))) {
-            tempStart = period.getStart();
-            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
-        } else if (budget.getCurrentYearMonth().equals(YearMonth.from(period.getEnd()))) {
-            tempStart = budget.getCurrentYearMonth().atDay(1);
-            tempEnd = period.getEnd();
-        } else {
-            tempStart = budget.getCurrentYearMonth().atDay(1);
-            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
-        }
-
-        return tempStart.until(tempEnd).getDays() + 1;
     }
 
     private boolean isSameMonth(LocalDate start, LocalDate end) {

@@ -24,6 +24,7 @@
 package io.github.tdd91;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 public class Period {
     private final LocalDate start;
@@ -40,5 +41,22 @@ public class Period {
 
     public LocalDate getEnd() {
         return end;
+    }
+
+    public int getValidDays(Budget budget) {
+        LocalDate tempStart;
+        LocalDate tempEnd;
+        if (budget.getCurrentYearMonth().equals(YearMonth.from(getStart()))) {
+            tempStart = getStart();
+            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+        } else if (budget.getCurrentYearMonth().equals(YearMonth.from(getEnd()))) {
+            tempStart = budget.getCurrentYearMonth().atDay(1);
+            tempEnd = getEnd();
+        } else {
+            tempStart = budget.getCurrentYearMonth().atDay(1);
+            tempEnd = budget.getCurrentYearMonth().atEndOfMonth();
+        }
+
+        return tempStart.until(tempEnd).getDays() + 1;
     }
 }
