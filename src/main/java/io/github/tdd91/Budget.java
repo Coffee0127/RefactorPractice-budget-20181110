@@ -71,7 +71,7 @@ public class Budget {
         return YearMonth.parse(getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM"));
     }
 
-    public int getOverlappingAmount(Period period) {
-        return getDailyAmount() * period.getValidDays(this);
+    public double getOverlappingAmount(Period period) {
+        return ((double) getDailyAmount()) * period.getValidDays(this);
     }
 }
