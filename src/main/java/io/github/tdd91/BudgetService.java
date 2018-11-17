@@ -70,19 +70,25 @@ public class BudgetService {
             // diff month
             YearMonth indexYearMonth = YearMonth.from(start);
             do {
-                int validDays;
+                YearMonth targetYearMonth = indexYearMonth;
+                Optional<Budget> budgetOptional = budgets.stream()
+                    .filter(budget -> YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM")).equals(targetYearMonth))
+                    .findFirst();
+                if (budgetOptional.isPresent()) {
+                    int validDays;
 
-                if (isFirstMonth(start, indexYearMonth)) {
-                    validDays = start.until(indexYearMonth.atEndOfMonth()).getDays() + 1;
-                } else if (isLastMonth(end, indexYearMonth)) {
-                    validDays = indexYearMonth.atDay(1).until(end).getDays() + 1;
-                } else {
-                    validDays = indexYearMonth.lengthOfMonth();
+                    if (isFirstMonth(start, indexYearMonth)) {
+                        validDays = start.until(indexYearMonth.atEndOfMonth()).getDays() + 1;
+                    } else if (isLastMonth(end, indexYearMonth)) {
+                        validDays = indexYearMonth.atDay(1).until(end).getDays() + 1;
+                    } else {
+                        validDays = indexYearMonth.lengthOfMonth();
+                    }
+
+                    durationDays.put(indexYearMonth, validDays);
                 }
 
-                durationDays.put(indexYearMonth, validDays);
                 indexYearMonth = indexYearMonth.plusMonths(1);
-
             } while (!indexYearMonth.isAfter(YearMonth.from(end)));
         }
 
