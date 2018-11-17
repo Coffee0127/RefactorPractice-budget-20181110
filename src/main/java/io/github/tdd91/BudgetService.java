@@ -67,6 +67,8 @@ public class BudgetService {
                     .filter(budget -> budget.getCurrentYearMonth().equals(targetYearMonth))
                     .findFirst();
                 if (budgetOptional.isPresent()) {
+                    Budget budget = budgetOptional.get();
+
                     LocalDate tempStart;
                     LocalDate tempEnd;
                     if (isFirstMonth(start, indexYearMonth)) {
@@ -81,7 +83,7 @@ public class BudgetService {
                     }
 
                     int validDays = tempStart.until(tempEnd).getDays() + 1;
-                    totalAmount += budgetOptional.get().getDailyAmount() * validDays;
+                    totalAmount += budget.getDailyAmount() * validDays;
                 }
 
                 indexYearMonth = indexYearMonth.plusMonths(1);
