@@ -68,6 +68,7 @@ public class BudgetService {
             return budgetOptional.get().getDailyAmount() * validDays;
         } else {
             // diff month
+            double totalAmount = 0D;
             YearMonth indexYearMonth = YearMonth.from(start);
             do {
                 YearMonth targetYearMonth = indexYearMonth;
@@ -85,23 +86,26 @@ public class BudgetService {
                         validDays = indexYearMonth.lengthOfMonth();
                     }
 
+                    totalAmount += budgetOptional.get().getDailyAmount() * validDays;
                     durationDays.put(indexYearMonth, validDays);
                 }
 
                 indexYearMonth = indexYearMonth.plusMonths(1);
             } while (!indexYearMonth.isAfter(YearMonth.from(end)));
+
+            return totalAmount;
         }
 
-        return durationDays.entrySet().stream()
-            .map(entry -> {
-                String key = DateTimeFormatter.ofPattern("yyyyMM").format(entry.getKey());
-                if (budgetPerDayMap.containsKey(key)) {
-                    return entry.getValue() * budgetPerDayMap.get(key);
-                }
-                return 0.0;
-            })
-            .reduce(0.0, (aDouble, number) -> aDouble.doubleValue() + number.doubleValue())
-            .doubleValue();
+        // return durationDays.entrySet().stream()
+        //     .map(entry -> {
+        //         String key = DateTimeFormatter.ofPattern("yyyyMM").format(entry.getKey());
+        //         if (budgetPerDayMap.containsKey(key)) {
+        //             return entry.getValue() * budgetPerDayMap.get(key);
+        //         }
+        //         return 0.0;
+        //     })
+        //     .reduce(0.0, (aDouble, number) -> aDouble.doubleValue() + number.doubleValue())
+        //     .doubleValue();
     }
 
     private boolean isLastMonth(LocalDate end, YearMonth indexYearMonth) {
