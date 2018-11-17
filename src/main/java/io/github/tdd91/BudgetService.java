@@ -48,7 +48,8 @@ public class BudgetService {
         }
 
         List<Budget> budgets = repo.getAll();
-        Map<String, Integer> budgetPerDayMap = findBudgetPerDayMap(budgets);
+        Map<String, Integer> budgetPerDayMap = budgets.stream()
+            .collect(toMap(Budget::getYearMonth, Budget::getDailyAmount));
 
         Map<YearMonth, Integer> durationDays = new HashMap<>();
 
@@ -98,11 +99,6 @@ public class BudgetService {
 
     private boolean isSameMonth(LocalDate start, LocalDate end) {
         return YearMonth.from(start).equals(YearMonth.from(end));
-    }
-
-    private Map<String, Integer> findBudgetPerDayMap(List<Budget> budgets) {
-        return budgets.stream()
-            .collect(toMap(Budget::getYearMonth, Budget::getDailyAmount));
     }
 
 }
