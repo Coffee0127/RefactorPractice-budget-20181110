@@ -25,7 +25,6 @@ package io.github.tdd91;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class BudgetService {
         // same month
         if (isSameMonth(start, end)) {
             Optional<Budget> budgetOptional = budgets.stream()
-                .filter(budget -> getCurrentYearMonth(budget).equals(YearMonth.from(start)))
+                .filter(budget -> budget.getCurrentYearMonth().equals(YearMonth.from(start)))
                 .findFirst();
 
             if (!budgetOptional.isPresent()) {
@@ -65,7 +64,7 @@ public class BudgetService {
             do {
                 YearMonth targetYearMonth = indexYearMonth;
                 Optional<Budget> budgetOptional = budgets.stream()
-                    .filter(budget -> getCurrentYearMonth(budget).equals(targetYearMonth))
+                    .filter(budget -> budget.getCurrentYearMonth().equals(targetYearMonth))
                     .findFirst();
                 if (budgetOptional.isPresent()) {
                     LocalDate tempStart;
@@ -90,10 +89,6 @@ public class BudgetService {
 
             return totalAmount;
         }
-    }
-
-    private YearMonth getCurrentYearMonth(Budget budget) {
-        return YearMonth.parse(budget.getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM"));
     }
 
     private boolean isLastMonth(LocalDate end, YearMonth indexYearMonth) {

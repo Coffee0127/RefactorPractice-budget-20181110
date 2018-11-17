@@ -66,4 +66,8 @@ public class Budget {
     public int getDailyAmount() {
         return getAmount() / getMonthDays();
     }
+
+    public YearMonth getCurrentYearMonth() {
+        return YearMonth.parse(getYearMonth(), DateTimeFormatter.ofPattern("yyyyMM"));
+    }
 }
