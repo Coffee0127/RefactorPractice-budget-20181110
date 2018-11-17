@@ -36,11 +36,7 @@ public class Period {
     }
 
     public int getValidDays(Period another) {
-        if (isInvalid()) {
-            return 0;
-        }
-
-        if (hasNoOverlap(another)) {
+        if (isInvalid() || hasNoOverlap(another)) {
             return 0;
         }
 
